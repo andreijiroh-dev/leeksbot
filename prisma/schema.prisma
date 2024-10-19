@@ -15,11 +15,23 @@ datasource db {
 }
 
 model SlackLeeks {
+  // message and channel IDs
   message_id    String  @id @unique
-  message_author String
+  channel_id    String
+
+  // posted message ID in leeks
   leeks_channel_post_id String?
+
+  // for moderation part
   first_flagged_by String
-  status   String  @default("under_review")
+  status   String  @default("pending")
+  review_queue_id  String?
+
+  // stats
+  leeksReact  Int @default(0)
+  leeksFlagCount Int @default(0)
+
+  // metadata
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
