@@ -1,0 +1,39 @@
+display_information:
+  name: Hack Club Leeks
+  description: "Found a leek? React with :leeks: or use the Flag as leek shortcut."
+  background_color: "#15a372"
+  long_description: 'I am a bot developed by @ajhalili2006 for the #hackclub-leeks channel, usually trigger through the :leeks: reaction or "Flag as leek" shortcut. Please do not use this to leak PII or confidential HQ stuff.'
+features:
+  bot_user:
+    display_name: Hack Club Leeks
+    always_online: false
+  shortcuts:
+    - name: Flag as leek
+      type: message
+      callback_id: leeks_flagops
+      description: "Discreetly forward this message to #hackclub-leeks without the :leeks: reaction"
+  slash_commands:
+    - command: /leeks
+      description: Access the Leeks bot command
+      usage_hint: "[help|...]"
+      should_escape: true
+oauth_config:
+  scopes:
+    bot:
+      - app_mentions:read
+      - reactions:read
+      - channels:history
+      - chat:write
+      - im:write
+      - commands
+      - emoji:read
+settings:
+  event_subscriptions:
+    bot_events:
+      - reaction_added
+      - reaction_removed
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false

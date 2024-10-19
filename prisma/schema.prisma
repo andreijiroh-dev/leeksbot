@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model SlackLeeks {
+  message_id    String  @id @unique
+  message_author String
+  leeks_channel_post_id String?
+  first_flagged_by String
+  status   String  @default("under_review")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
