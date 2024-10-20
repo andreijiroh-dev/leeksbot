@@ -24,6 +24,7 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "@slack/bolt": "^3.22.0",
+    "@slack/logger": "^4.0.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
