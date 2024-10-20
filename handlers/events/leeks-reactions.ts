@@ -2,15 +2,26 @@ import type {
   AllMiddlewareArgs,
   SlackEventMiddlewareArgs
 } from "@slack/bolt"
-import { leeksReactionEmojis } from "../../lib/constants";
+import { allowlistedChannels, leeksReactionEmojis } from "../../lib/constants";
 import { detectEnvForChannel } from "../../lib/env";
-import { prisma } from "../../app";
+import { logOps, prisma } from "../../app";
+import { generateReviewQueueMessage } from "../../lib/blocks";
 
 export const leeksReactionCb = async ({
   client,
   event
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<"reaction_added">) => {
-  const { item, reaction, user } = event
+  const { item, reaction, user, event_ts } = event
+  const isChannelAllowlisted = allowlistedChannels.includes(item.channel)
+
+  logOps.info("Received reaction data: ", JSON.stringify({
+    item,
+    user,
+    reaction,
+    event_ts,
+    isChannelAllowlisted
+  }))
+
   if (item.channel === detectEnvForChannel()) return;
   if (!leeksReactionEmojis.includes(reaction)) return;
 
@@ -20,18 +31,14 @@ export const leeksReactionCb = async ({
     }
   })
 
-  const { permalink } = await client.chat.getPermalink({
-    channel: item.channel,
-    message_ts: item.ts
-  })
-
   if (entry === null) {
     entry = await prisma.slackLeeks.create({
       data: {
         message_id: item.ts,
         channel_id: item.channel,
         leeksReact: 1,
-        first_flagged_by: user
+        first_flagged_by: user,
+        status: isChannelAllowlisted === true ? "pending" : "dequeued"
       }
     })
   } else {
@@ -49,62 +56,11 @@ export const leeksReactionCb = async ({
     if (!entry.review_queue_id || entry.review_queue_id == "") {
       const review = await client.chat.postMessage({
         channel: "C07RS0CEQPP",
-        blocks: [
-          {
-            type: "header",
-            text: {
-              type: "plain_text",
-              text: "New possible leek for review"
-            }
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `*Link to original message*: ${permalink}`
-            }
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `*First flagged by*: <@${user}>`
-            }
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: "*Method*: Leeks reaction"
-            }
-          },
-          {
-            type: "actions",
-            elements: [
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "Approve and post",
-                  emoji: true
-                },
-                value: item.ts,
-                action_id: "approve_leek"
-              },
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "Deny",
-                  emoji: true
-                },
-                value: item.ts,
-                action_id: "deny_leek"
-              }
-            ],
-            block_id: "review_queue_buttons"
-          }
-        ]
+        blocks: await generateReviewQueueMessage(
+          item.ts,
+          item.channel,
+          user,
+          "reaction")
       });
 
       await prisma.slackLeeks.update({
@@ -123,4 +79,41 @@ export const leeksReactionCb = async ({
       text: `The message you're trying to flag as leek via reaction was rejected by Leeks Bot Review Queue team (<!subteam^S07SN8KQZFC>). If this is a mistake, please contact one of them via DMs or at #leeksbot meta channel.`
     })
   }
+}
+
+export const leeksReactionRemovalCb = async ({
+  client,
+  event
+}: AllMiddlewareArgs & SlackEventMiddlewareArgs<"reaction_added">) => {
+  const { item, reaction, user, event_ts } = event
+  const isChannelAllowlisted = allowlistedChannels.includes(item.channel)
+
+  logOps.info("Received reaction data: ", JSON.stringify({
+    item,
+    user,
+    reaction,
+    event_ts,
+    isChannelAllowlisted
+  }))
+
+  if (item.channel === detectEnvForChannel()) return;
+  if (!leeksReactionEmojis.includes(reaction)) return;
+
+  let entry = await prisma.slackLeeks.findFirst({
+    where: {
+      message_id: item.ts
+    }
+  })
+
+  // if it is not in our database yet, ignore for now
+  if (entry == null) return;
+
+  entry = await prisma.slackLeeks.update({
+    where: {
+      message_id: item.ts
+    },
+    data: {
+      leeksReact: entry.leeksReact - 1
+    }
+  })
 }

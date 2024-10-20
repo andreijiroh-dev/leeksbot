@@ -6,7 +6,8 @@
  */
 export const botAdmins = [
   "U07CAPBB9B5", // ~ajhalili2006
-  "U04G40QKAAD" // ~polypixeldev
+  "U04G40QKAAD", // ~polypixeldev
+  "U079A6KNYB1" // ~ssmidge
   // TODO: Add FD team members and Nest admins here
 ];
 
@@ -28,5 +29,12 @@ export const allowlistedChannels = [
   "C06RPCQH482", // Nest?
 ]
 
+/**
+ * The Slack channel ID of #hackclub-leeks itself
+ */
 export const leeksChannel = "C06089401GT"
+/**
+ * Technically the channel ID of ~ajhalili2006's private channel for
+ * Slack app development workflow testing.
+ */
 export const testingCenter = "C07F3GDQMJS"

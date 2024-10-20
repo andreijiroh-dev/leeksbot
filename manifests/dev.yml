@@ -1,11 +1,11 @@
 display_information:
   name: Hack Club Leeks Lab
-  description: "We're testing things for the leeksbot soon :)"
+  description: We're testing things for the leeksbot soon :)
   background_color: "#15a372"
   long_description: 'I am a bot developed by @ajhalili2006 for the #hackclub-leeks channel, usually trigger through the :leeks: reaction or "Flag as leek" shortcut. Please do not use this to leak PII or confidential HQ stuff.'
 features:
   bot_user:
-    display_name: Hack Club Leeks
+    display_name: Hack Club Leeks Dev
     always_online: false
   shortcuts:
     - name: Flag as leek
