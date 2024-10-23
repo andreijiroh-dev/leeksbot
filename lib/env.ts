@@ -35,3 +35,11 @@ export function detectEnvForChannel() {
     return testingCenter
   }
 }
+
+export function getBaseSlashCommand() {
+  if (config.env == "production") {
+    return `/leeks`
+  } else {
+    return `/leeks-dev`
+  }
+}

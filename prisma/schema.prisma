@@ -18,6 +18,7 @@ model SlackLeeks {
   // message and channel IDs
   message_id    String  @id @unique
   channel_id    String
+  permalink_message_id String? // for now
 
   // posted message ID in leeks
   leeks_channel_post_id String?

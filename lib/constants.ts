@@ -27,6 +27,7 @@ export const allowlistedChannels = [
   "C0710J7F4U9", // YSWS meta channel
   "C01FXNNF6F2", // this is a bit tempting to look around Zach's channel here
   "C06RPCQH482", // Nest?
+  "C016DEDUL87" // #cdn
 ]
 
 /**
@@ -38,3 +39,5 @@ export const leeksChannel = "C06089401GT"
  * Slack app development workflow testing.
  */
 export const testingCenter = "C07F3GDQMJS"
+
+export const queueChannel = "C07RS0CEQPP";

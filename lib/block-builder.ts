@@ -55,6 +55,28 @@ export class MarkdownText extends Text {
   }
 }
 
+/**
+ * A image element
+ */
+export class Image extends Renderable {
+  constructor(
+    // The image URL
+    private url: String,
+    // the alt text of the image
+    private alttext?: String
+  ) {
+    super();
+  }
+
+  render() {
+    return {
+      type: "image",
+      image_url: this.url,
+      alt_text: this.alttext
+    }
+  }
+}
+
 abstract class Action extends Renderable {
   constructor(protected action_id: string) {
     super();
@@ -86,6 +108,7 @@ export class TextSection extends Section {
   constructor(
     private text: Text,
     block_id: string | null = null,
+    private fields: Text[] | null = null,
     private accessory: Accessory | null = null
   ) {
     super(block_id);
@@ -95,6 +118,7 @@ export class TextSection extends Section {
     let r: any = {
       type: "section",
       text: this.text.render(),
+      fields: this.fields?.map((field) => field.render()) || null,
       accessory: this.accessory?.render(),
     };
     if (this.block_id != null) r.block_id = this.block_id;
@@ -215,6 +239,19 @@ export class ActionsSection extends Section {
       type: "actions",
       elements: this.actions.map((action) => action.render()),
     };
+  }
+}
+
+export class ContextSection extends Section {
+  constructor(private elements: Text[] | Image[]) {
+    super();
+  }
+
+  render() {
+    return {
+      type: "context",
+      elements: this.elements.map((element) => element.render())
+    }
   }
 }
 
