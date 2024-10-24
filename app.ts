@@ -11,6 +11,7 @@ export const logOps = new ConsoleLogger()
 export const slackApp = new App({
   token: config.slack.botToken,
   appToken: config.slack.appToken,
+  signingSecret: config.slack.sigSecret,
   logLevel: env.LOGOPS_DEBUG !== undefined ? LogLevel.DEBUG : LogLevel.INFO,
   socketMode: config.slack.socketMode,
   customRoutes: [

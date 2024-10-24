@@ -13,7 +13,8 @@ type BotEnvConfig = {
   slack: {
     botToken?: string,
     appToken?: string
-    socketMode: boolean
+    socketMode: boolean,
+    sigSecret: string
   }
 }
 
@@ -24,7 +25,8 @@ export const config: BotEnvConfig = {
   slack: {
     botToken: env.SLACK_BOT_TOKEN,
     appToken: env.SLACK_APP_TOKEN,
-    socketMode: env.NODE_ENV != "production"
+    socketMode: env.NODE_ENV != "production",
+    sigSecret: env.SLACK_SIGNING_SECRET
   }
 }
 
