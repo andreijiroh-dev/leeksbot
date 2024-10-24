@@ -1,3 +1,4 @@
+import { slackApp } from "../app";
 
 /**
  * Extracts the last part of Slack message permalink through some regex.
@@ -19,4 +20,31 @@ export function extractPermalink(permalinkUrl) {
   }
 }
 
-
+/**
+ * A utility function to easily sending a DM to someone without needing to doing
+ * `client.conversations.open` first (it'll do that for you behind the scenes).
+ * @param user Slack user ID
+ * @param data Either a string or a object following `client.chat.postMessage` parameters
+ * @returns 
+ */
+export async function sendDM(user: string, data: string | object) {
+  try {
+    const {channel: imChannelData} = await slackApp.client.conversations.open({
+      users: user
+    })
+  
+    let postMessageData: any = {
+      channel: imChannelData.id,
+    }
+  
+    if (typeof data == "string") {
+      postMessageData.text = data
+    } else if (typeof data == "object") {
+      Object.assign(postMessageData, data)
+    }
+  
+    return await slackApp.client.chat.postMessage(postMessageData)
+  } catch (error) {
+    throw Error(error)
+  }
+}

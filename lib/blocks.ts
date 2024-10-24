@@ -1,6 +1,6 @@
 import { ActionsSection, Blocks, ButtonAction, ContextSection, DividerSection, HeaderSection, MarkdownText, PlainText, TextSection } from "./block-builder";
 import { slackApp } from "../app";
-import { getBaseSlashCommand } from "./env";
+import { detectEnvForChannel, getBaseSlashCommand } from "./env";
 
 export const helpCommand = [
   new HeaderSection(new PlainText("Help commands for leeksbot")).render(),
@@ -17,7 +17,7 @@ export const generateReviewQueueMessage = async (
   msg_id: string,
   channel_id: string,
   user_id: string,
-  method: "reaction" | "msg_action"
+  method: "reaction" | "msg_action" | "requeued"
 ) => {
   const { permalink } = await slackApp.client.chat.getPermalink({
     channel: channel_id,
@@ -28,6 +28,7 @@ export const generateReviewQueueMessage = async (
 
   if (method == "reaction") submissionMethod == "Leeks reaction";
   if (method == "msg_action") submissionMethod == "Flag as leeks message reaction";
+  if (method == "requeued") submissionMethod == "Requeued back from backburner";
 
   return new Blocks([
     new HeaderSection(new PlainText("New possible leek for review")),
@@ -58,7 +59,7 @@ export const dequeuedMessage = (
   return new Blocks([
     new HeaderSection(new PlainText("Possible leek but dequeued")),
     new TextSection(new MarkdownText("We're not showing the metadata for this one because the original message is posted outside the allowlisted channels.")),
-    new TextSection(new MarkdownText(`To add back to the review queue, run \`/leeks[-dev] queue ${msg_id}\` or press the *Add to review queue* button below and the bot will add it back to the queue.`)),
+    new TextSection(new MarkdownText(`To add back to the review queue, run \`${getBaseSlashCommand()} queue ${msg_id}\` or press the *Add to review queue* button below and the bot will add it back to the queue.`)),
     new ActionsSection([
       new ButtonAction(
         new PlainText("Add to review queue"),
@@ -79,4 +80,8 @@ export const dequeuedMessage = (
 
 export const permissionDenied = new Blocks([
   new TextSection(new MarkdownText(":x: You don't have enough permissions to do this. If you're a review queue team member for leeksbot, please <https://github.com/andreijiroh-dev/issues|file a new issue> or contact @ajhalili2006."))
+]).render()
+
+export const dontUseItHere = new Blocks([
+  new TextSection(new MarkdownText(`*You probably don't want to use it here, right?* We blocked usage of this message action on <#${detectEnvForChannel()}> and in DMs.`))
 ]).render()

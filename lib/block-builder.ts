@@ -34,11 +34,12 @@ export class PlainText extends Text {
   }
 
   render() {
-    return {
+    let r: any = {
       type: "plain_text",
-      text: this.text,
-      emoji: this.emoji,
+      text: this.text
     };
+    if (this.emoji == true) r.emoji = true;
+    return r
   }
 }
 
@@ -118,10 +119,10 @@ export class TextSection extends Section {
     let r: any = {
       type: "section",
       text: this.text.render(),
-      fields: this.fields?.map((field) => field.render()) || null,
       accessory: this.accessory?.render(),
     };
     if (this.block_id != null) r.block_id = this.block_id;
+    if (this.fields != null) r.fields = this.fields?.map((field) => field.render())
     return r;
   }
 }

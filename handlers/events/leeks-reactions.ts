@@ -2,10 +2,11 @@ import type {
   AllMiddlewareArgs,
   SlackEventMiddlewareArgs
 } from "@slack/bolt"
-import { allowlistedChannels, leeksReactionEmojis } from "../../lib/constants";
-import { detectEnvForChannel } from "../../lib/env";
-import { logOps, prisma } from "../../app";
-import { generateReviewQueueMessage } from "../../lib/blocks";
+import { allowlistedChannels, leeksReactionEmojis, queueChannel } from "../../lib/constants";
+import { detectEnvForChannel, getBaseSlashCommand } from "../../lib/env";
+import { logOps, prisma, slackApp } from "../../app";
+import { dequeuedMessage, generateReviewQueueMessage } from "../../lib/blocks";
+import { extractPermalink } from "../../lib/utils";
 
 export const leeksReactionCb = async ({
   client,
@@ -21,6 +22,11 @@ export const leeksReactionCb = async ({
     event_ts,
     isChannelAllowlisted
   }))
+
+  const permalink = (await slackApp.client.chat.getPermalink({
+    channel: item.channel,
+    message_ts: item.ts
+  })).permalink
 
   if (item.channel === detectEnvForChannel()) return;
   if (!leeksReactionEmojis.includes(reaction)) return;
@@ -38,7 +44,8 @@ export const leeksReactionCb = async ({
         channel_id: item.channel,
         leeksReact: 1,
         first_flagged_by: user,
-        status: isChannelAllowlisted === true ? "pending" : "dequeued"
+        status: isChannelAllowlisted === true ? "pending" : "dequeued",
+        permalink_message_id: extractPermalink(permalink)
       }
     })
   } else {
@@ -53,7 +60,7 @@ export const leeksReactionCb = async ({
   }
 
   if (entry.status == "pending") {
-    if (!entry.review_queue_id || entry.review_queue_id == "") {
+    if (!entry.review_queue_id || entry.review_queue_id == "deleted") {
       const review = await client.chat.postMessage({
         channel: "C07RS0CEQPP",
         blocks: await generateReviewQueueMessage(
@@ -72,6 +79,33 @@ export const leeksReactionCb = async ({
         }
       })
     }
+
+    await client.chat.postEphemeral({
+      channel: item.channel,
+      user: user,
+      text: `Thanks for flagging the message privately (ID: \`${entry.message_id}\`) as a leek! If you flagged this for the first time, we'll reach to you via DMs if we approved it. If not, check its status via \`${getBaseSlashCommand()} status ${entry.message_id}\`.`
+    })
+  } else if (entry.status == "dequeued") {
+    if (!entry.review_queue_id || entry.review_queue_id == "deleted") {
+      const dequeued = await client.chat.postMessage({
+        channel: queueChannel,
+        blocks: dequeuedMessage(entry.message_id)
+      })
+
+      await prisma.slackLeeks.update({
+        where: {
+          message_id: item.ts,
+        },
+        data: {
+          review_queue_id: dequeued.ts
+        }
+      })
+    }
+    await client.chat.postEphemeral({
+      channel: item.channel,
+      user: user,
+      text: `You reacted to a message (ID: \`${entry.message_id}\`) in this channel but it is none of our <https://mau.dev/andreijiroh-dev/leeksbot/-/blob/main/lib/constants.ts?ref_type=heads#L22|allowlisted channels>. We still logged it on the database just in case.`
+    })
   } else if (entry.status == "rejected") {
     await client.chat.postEphemeral({
       channel: item.channel,
