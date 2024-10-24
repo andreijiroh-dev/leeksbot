@@ -9,15 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model SlackLeeks {
   // message and channel IDs
-  message_id    String  @id @unique
-  channel_id    String
+  message_id           String  @id @unique
+  channel_id           String
   permalink_message_id String? // for now
 
   // posted message ID in leeks
@@ -25,11 +25,11 @@ model SlackLeeks {
 
   // for moderation part
   first_flagged_by String
-  status   String  @default("pending")
+  status           String  @default("pending")
   review_queue_id  String?
 
   // stats
-  leeksReact  Int @default(0)
+  leeksReact     Int @default(0)
   leeksFlagCount Int @default(0)
 
   // metadata
