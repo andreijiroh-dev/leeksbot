@@ -1,0 +1,11 @@
+[Unit]
+Description=leeksbot slack app
+
+[Service]
+ExecStart=/home/ajhalili2006/.asdf/shims/npm start
+WorkingDirectory=/home/ajhalili2006/git/leeksbot
+RestartSec=5s
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

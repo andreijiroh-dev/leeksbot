@@ -29,6 +29,7 @@
     "url": "https://github.com/sponsors/ajhalili2006"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.20.1",
     "@prisma/client": "^5.20.0",
     "@slack/bolt": "^4.0.0",
     "@slack/logger": "^4.0.0",

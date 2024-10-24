@@ -7,7 +7,8 @@
 export const botAdmins = [
   "U07CAPBB9B5", // ~ajhalili2006
   "U04G40QKAAD", // ~polypixeldev
-  "U079A6KNYB1" // ~ssmidge
+  "U079A6KNYB1", // ~ssmidge
+  "U059VC0UDEU" // ~skyfall
   // TODO: Add FD team members and Nest admins here
 ];
 
