@@ -3,12 +3,13 @@
 [![Hack Club](https://badges.api.lorebooks.wiki/badges/hackclub/hackclub?style=flat-square)](https://hackclub.com/slack)
 
 A Slack app for flagging leeks around the Hack Club Slack, with a review queue
-to prevent abuse and false postives.
+to prevent abuse and false postives. Proudly hosted on [Nest](https://hackclub.app).
 
-**CALLING FOR CONTRIBUTIONS AND MAINTAINERS**: This project is currently a one-man operation and needs your help to keep it maintained. If you can't
-support the project in-kind, consider [sponsoring Andrei Jiroh's work](https://sponsors.andreijiroh.dev) or [help Hack Club Nest admins pay the biils](https://hcb.hackclub.com/donations/start/nest)[^1].
+**CALLING FOR CONTRIBUTIONS AND MAINTAINERS**: This project is currently a one-man operation and needs your help to keep it maintained. Learn more in the project's
+[contributing guidelines](./CONTRIBUTING.md) If you can't support the project by contributing patches and bug reports,
+consider [sponsoring Andrei Jiroh's work](https://sponsors.andreijiroh.dev) or [help Hack Club Nest admins pay the biils](https://hcb.hackclub.com/donations/start/nest)[^1].
 
-## Context
+## Context for non-Hack Clubbers
 
 The term `leek` is used among Hack Clubbers to say that they spotted
 something being cooked on from the HQ without any announcement whatsoever.
@@ -40,6 +41,7 @@ of review queues to ensure nothing go wrong and to avoid troubles with the HQ.
 
 - Review queues for the bot admins to avoid false positives, similar to Prox2.
 - React with :leeks: or use the `Flag as leek` message action.
+- Utility slash commands to track status and to speed up moderation actions for reviewers.
 
 ## Privacy Policy
 

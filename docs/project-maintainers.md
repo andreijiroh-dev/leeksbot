@@ -6,7 +6,7 @@ source code:
 * [Andrei Jiroh Halili](htttps://mau.dev/ajhalili2006) - lead maintainer
   * Hack Club Slack handle: `ajhalili2006`
   * Hack Clubber since Arcade 2024, also SABDFL and Open-source Dev at RecapTime.dev
-  * GPG keys: `4D5E631758CB9CC45941B1CE67BFC91B3DA12BE8` / `A715100E58CF60500EE159652F384539C700B263`
+  * GPG keys for CoC reports ans security vunlerabilities: `4D5E631758CB9CC45941B1CE67BFC91B3DA12BE8` / `A715100E58CF60500EE159652F384539C700B263`
 
 ## Adding yourself to the list
 
@@ -17,7 +17,7 @@ appending the list above:
 * [Your name here](link to your website or code forge profile)
   * Hack Club Slack handle: `nickname here`
   * Hack Clubber since <event name and YYYY or YYYY-MM>, [also mention any other affliations here]
-  * GPG keys: `your GPG key IDs here used for commit signing`
+  * GPG keys for CoC reports ans security vunlerabilities: `your GPG key IDs here used for commit signing`
 ```
 
 Then send a patch [following the instructions in the contributing guidelines](../CONTRIBUTING.md#sending-patches).
