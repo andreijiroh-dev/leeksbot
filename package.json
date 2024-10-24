@@ -9,10 +9,13 @@
     "studio": "npm run studio:dev",
     "migrate:dev": "dotenvx run -f .env -- prisma migrate dev",
     "migrate:prod": "dotenvx run -f .env.production -- prisma migrate deploy",
-    "studio:dev": "BROWSER=none dotenvx run -f .env -- prisma studio --browser none"
+    "studio:dev": "BROWSER=none dotenvx run -f .env -- prisma studio --browser none",
+    "studio:prod": "BROWSER=none dotenvx run -f .env.production -- prisma studio -- browser none"
   },
   "author": {
-    "name": "Andrei Jiroh Halili"
+    "name": "Andrei Jiroh Halili",
+    "email": "ajhalili2006@andreijiroh.dev",
+    "url": "https://andreijiroh.dev"
   },
   "license": "MPL-2.0",
   "repository": {
@@ -20,7 +23,10 @@
     "url": "https://mau.dev/andreijiroh-dev/leeksbot"
   },
   "bugs": {
-    "url": "https://mau.dev/andreijiroh-dev/leeksbot"
+    "url": "https://mau.dev/andreijiroh-dev/leeksbot/issues"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/ajhalili2006"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

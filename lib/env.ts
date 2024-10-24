@@ -24,7 +24,7 @@ export const config: BotEnvConfig = {
   slack: {
     botToken: env.SLACK_BOT_TOKEN,
     appToken: env.SLACK_APP_TOKEN,
-    socketMode: Boolean(env.SLACK_APP_SOCKET_MODE) || true
+    socketMode: env.NODE_ENV != "production"
   }
 }
 
