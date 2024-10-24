@@ -126,9 +126,6 @@ export const reviewQueueHandler = async ({ ack, client, body }:
 
     await client.chat.postMessage({
       channel: imChannelData.id,
-      blocks: new Blocks([
-        new TextSection(new MarkdownText("test"))
-      ]).render(),
       text: `Hey <@${entry.first_flagged_by}>! Thanks for finding that real leek and is now approved by <@${botAdminId}>, check it now at <#${detectEnvForChannel()}>.`
     })
 
