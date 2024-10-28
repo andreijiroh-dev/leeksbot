@@ -29,7 +29,7 @@ In the [What Hack Club is not](https://hackclub.slack.com/files/UDK5M9Y13/F072YG
 > aren't *guaranteed* an answer, but frequently information is not shared simply because it is impractical
 > to put every possible thing out in the open.
 
-The channel `#hackclub-leeks` was created October 9th, 2023 by `[PERSON SHALL NOT BE NAMED]`[^2], initially called `#hc-site-tracker` and renamed many times in the past to track changes in Hack Club site (and the `hackclub.dev` domain)
+The channel `#hackclub-leeks` was created October 9th, 2023 by Reese Armstrong, initially called `#hc-site-tracker` and renamed many times in the past to track changes in Hack Club site (and the `hackclub.dev` domain)
 with help of other data sleuths at Hack Club. Fast forward to this day, the channel has been used to get a sneak peek into upcoming events that the HQ been cooking
 (even some staff sharing them).
 
@@ -59,5 +59,3 @@ Department if found breaking [the Hack Club Code of Conduct](./CODE_OF_CONDUCT.m
 - Documentation at `./docs`: CC-BY-SA-4.0
 
 [^1]: [Nest](https://hackclub.app) is a HQ-funded project and part of [the tildeverse](https://tildeverse.org). Although Hack Club funds the tilde to pay for the dedicated Linux server on Hetzer from donors, please note that the admins are unpaid volunteers and maintain it on their own time.
-[^2]: We wish we could say Reese Armstrong's name uncensored, but due to [an current active community ban (as of October 21, 2024)](https://hackmd.io/@alexjs/Bkm1KIpxR) we had to do unnecessary censorship here to avoid being "hit by a bus" when mentioning banned people. Those reading about the [WIP blog post](https://gildedguy.com/working-on-dragon-anim#:~:text=Some%20time%20ago%2C%20Mar%E2%80%99s%20creator%20found%20himself%20in%20a%20whirlwind%20of%20controversy%20and%20disappeared%20from%20the%20net%20without%20explanation%2C%20or%20any%20attempt%20to%20justify%20himself.)
-for [Gildedguy Story 8](https://gildedguy.com/gildedguy-the-dragon-of-mar-is-out-in-the-wild) might also familiar with the whole Barthimo1 situtation (which we'll not discuss in detail here).
