@@ -26,9 +26,13 @@ export const generateReviewQueueMessage = async (
 
   let submissionMethod;
 
-  if (method == "reaction") submissionMethod == "Leeks reaction";
-  if (method == "msg_action") submissionMethod == "Flag as leeks message reaction";
-  if (method == "requeued") submissionMethod == "Requeued back from backburner";
+  if (method == "reaction") {
+    submissionMethod == "Leeks reaction";
+  } else if (method == "msg_action") {
+    submissionMethod == "Flag as leeks message reaction";
+  } else if (method == "requeued") {
+    submissionMethod == "Requeued back from backburner";
+  }
 
   return new Blocks([
     new HeaderSection(new PlainText("New possible leek for review")),

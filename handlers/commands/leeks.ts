@@ -135,6 +135,15 @@ export const botCommandHandler = async ({
         }
       })
     } else {
+      entry = await prisma.slackLeeks.update({
+        where: {
+          message_id: entry.message_id
+        },
+        data: {
+          status: "pending"
+        }
+      })
+
       await client.chat.update({
         channel: queueChannel,
         ts: entry.review_queue_id,

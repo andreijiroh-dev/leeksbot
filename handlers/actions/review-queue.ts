@@ -32,61 +32,6 @@ export const reviewQueueHandler = async ({ ack, client, body }:
     }
   })
 
-  if (entry.status !== "pending") {
-    logOps.info(`review-queue:${entry.message_id}`, "message blocks might be outdated, fixing in it")
-
-    if (entry.status == "approved") {
-      await client.chat.update({
-        channel: queueChannel,
-        ts: entry.review_queue_id,
-        blocks: [
-          message.blocks[0],
-          message.blocks[1],
-          message.blocks[2],
-          message.blocks[3],
-          new TextSection(
-            new MarkdownText(":white_check_mark: Approved, see the thread for audit log and more.")
-          ).render(),
-          new ActionsSection([
-            new ButtonAction(
-              new PlainText(":leftwards_arrow_with_hook: Undo approval and delete", true),
-              entry.message_id,
-              "delete")
-          ]).render(),
-          new ContextSection([
-            new MarkdownText(`Original message ID on database: \`${entry.message_id}\``)
-          ]).render()
-        ]
-      })
-    } else if (entry.status == "denied") {
-      await client.chat.update({
-        channel: queueChannel,
-        ts: entry.review_queue_id,
-        blocks: [
-          message.blocks[0],
-          message.blocks[1],
-          message.blocks[2],
-          message.blocks[3],
-          new TextSection(
-            new MarkdownText(":x: Blocked, see the thread for audit log and more.")
-          ).render(),
-          new ContextSection([
-            new MarkdownText(`Original message ID on database: \`${entry.message_id}\``)
-          ]).render()
-        ]
-      })
-    }
-
-    await client.chat.postMessage({
-      channel: queueChannel,
-      thread_ts: entry.review_queue_id,
-      text: "*audit logs*: queue message updated to sync with database",
-      //username: "leeksbot audit logs"
-    })
-
-    return;
-  }
-
   // get permalink of original message
   const { permalink } = await client.chat.getPermalink({
     channel: entry.channel_id,
@@ -212,6 +157,15 @@ export const addToQueueHandler = async ({
   let entry = await prisma.slackLeeks.findFirst({
     where: {
       message_id: value
+    }
+  })
+
+  await prisma.slackLeeks.update({
+    where: {
+      message_id: entry.message_id
+    },
+    data: {
+      status: "pending"
     }
   })
 

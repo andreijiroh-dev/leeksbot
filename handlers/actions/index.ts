@@ -1,5 +1,5 @@
 import { App, BlockButtonAction } from "@slack/bolt";
-import { reviewQueueHandler } from "./review-queue";
+import { addToQueueHandler, reviewQueueHandler } from "./review-queue";
 import { queueChannel } from "../../lib/constants";
 import { logOps, prisma } from "../../app";
 import { Blocks, MarkdownText, PlainText, TextSection } from "../../lib/block-builder";
@@ -9,6 +9,7 @@ export const blockActionsRegistry = (app: App) => {
   // buttons
   app.action("approve_leek", reviewQueueHandler);
   app.action("deny_leek", reviewQueueHandler);
+  app.action("queue_for_review", addToQueueHandler);
   app.action <BlockButtonAction>("ignore_leek", async({client, ack, body}) => {
     // ack first
     await ack();
