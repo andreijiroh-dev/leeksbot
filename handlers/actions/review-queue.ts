@@ -1,9 +1,20 @@
-import { AllMiddlewareArgs, BlockAction, BlockButtonAction, SlackActionMiddlewareArgs } from '@slack/bolt';
+import {
+  AllMiddlewareArgs,
+  BlockButtonAction,
+  SlackActionMiddlewareArgs
+} from '@slack/bolt';
 import { logOps, prisma } from '../../app';
 import { detectEnvForChannel } from '../../lib/env';
 import { botAdmins, queueChannel } from '../../lib/constants';
 import { generateReviewQueueMessage, permissionDenied } from '../../lib/blocks';
-import { ActionsSection, Blocks, ButtonAction, ContextSection, MarkdownText, PlainText, TextSection } from '../../lib/block-builder';
+import {
+  ActionsSection,
+  ButtonAction,
+  ContextSection,
+  MarkdownText,
+  PlainText,
+  TextSection
+} from '../../lib/block-builder';
 import { sendDM } from '../../lib/utils';
 
 export const reviewQueueHandler = async ({ ack, client, body }:
@@ -184,7 +195,7 @@ export const addToQueueHandler = async ({
 }
 
 export const undoApproveLeek = async ({ ack, client, body }:
-  AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockButtonAction>) {
+  AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockButtonAction>) => {
   const { user, actions, message, channel } = body;
   const { id: botAdminId } = user
   const { value, } = actions[0]
@@ -207,4 +218,23 @@ export const undoApproveLeek = async ({ ack, client, body }:
       message_id: value
     }
   })
+
+  if (entry.status == "approved") {
+    await client.chat.delete({
+      channel: detectEnvForChannel(),
+      ts: entry.leeks_channel_post_id
+    })
+
+    entry = await prisma.slackLeeks.update({
+      where: {
+        message_id: entry.message_id
+      },
+      data: {
+        leeks_channel_post_id: "deleted",
+        status: "flagged_as_notleek"
+      }
+    })
+
+    await sendDM(entry.first_flagged_by, `Hey there, we had to taken down your previously flagged leek from the channel because it is not a leek. You can appeal it in #leeksbot-meta if this is really a leek.`)
+  }
 }
