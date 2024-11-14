@@ -139,7 +139,7 @@ export const addToQueueHandler = async ({
   logOps.debug(`review-queue`, `received event data:`, JSON.stringify(body))
   const { user, actions, channel, message } = body
   const { id: botAdminId } = user
-  const { value, action_id } = actions[0]
+  const { value } = actions[0]
 
   // ack it first before doing any other processing
   await ack()
@@ -181,4 +181,30 @@ export const addToQueueHandler = async ({
   })
 
   await sendDM(entry.first_flagged_by, `Hey there, we have requeued your leek flag (message ID: ${entry.message_id}) for review by an admin. Expect another message here for any updates.`)
+}
+
+export const undoApproveLeek = async ({ ack, client, body }:
+  AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockButtonAction>) {
+  const { user, actions, message, channel } = body;
+  const { id: botAdminId } = user
+  const { value, } = actions[0]
+
+  // ack it first before doing any other processing
+  await ack()
+
+  if (!botAdmins.includes(botAdminId)) {
+    await client.chat.postEphemeral({
+      channel: channel.id,
+      user: botAdminId,
+      blocks: permissionDenied
+    })
+
+    return;
+  }
+
+  let entry = await prisma.slackLeeks.findFirst({
+    where: {
+      message_id: value
+    }
+  })
 }
