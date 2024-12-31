@@ -5,10 +5,15 @@ Thank you for your interest in contributing into the project!
 ## Preflight Checklist
 
 * [ ] Read and understand the project's [code of conduct](./CODE_OF_CONDUCT.md)
-* [ ] Agree to the [Developer's Certificate of Origin](https://developercertificate.org/) (We don't do CLAs here to minimize legal admin headaches with HCB.)
+* [ ] Agree to the [Developer's Certificate of Origin](https://developercertificate.org/) (We don't do CLAs here to minimize legal admin headaches with the HCB team.)
 * [ ] For Hack Clubbers, join the `#leeksbot-meta` (app dev and project meta discusions) and the main `#hackclub-leeks` channel.
 
 ### Requirements
+
+You can use Nix via our `devenv.nix` configuration (see <https://devenv.sh/install> for
+the installation guide).
+
+Alternatively, you can manually set up your development environment with the following
 
 * Node.js 20.x or later - When using `nvm` or `asdf`, please use the even-numbered LTS versions
 (if the latest version is even-numbered,wait until the official LTS announcement)
@@ -19,6 +24,9 @@ To use `prisma migrate` commands, you need two databases, one for data persisten
 ## Running a local dev instance
 
 1. Ask @ajhalili2006 for the `DOTENV_PRIVATE_KEY` to decrypt the dev secrets via `dotenvx`.
+    * Alternatively, reset everything by blanking the contents of `.env.development` (without commiting
+    on your personal
+    branch/fork to avoid conflicts) and configure your own secrets via `dotenvx set`
 2. Install dependencies: `npm i`
 3. Run local instance with hot-reloading via `ts-node-dev`: `npm run dev`
 
@@ -65,4 +73,4 @@ If you prefer to send patches via email, please do not send it to Andrei Jiroh
 or other project maintainers directly (not even attaching the patch files
 on Slack).
 
-TBD
+More details on how to send email patches will be added soon.

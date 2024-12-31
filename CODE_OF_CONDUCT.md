@@ -1,10 +1,13 @@
 # Code of Conduct
 
 The [Recap Time Squad Community Code of Conduct](https://policies.recaptime.dev/code-of-conduct)
-applies to this open-source project by a squad member for
-the code and non-code contributions via this repository. But since this is built as part of the
-Hack Club Slack community, the [Hack Club Code of Conduct](https://hackclub.com/conduct/) also apply here,
-regardless of their elgibility for YSWS grants at Hack Club.
+applies to this open-source project since it is built and primarily maintained
+by a team member (@ajhalili2006) for the code and non-code contributions via this
+repository.
+
+But since this is built as part of the Hack Club Slack community, the [Hack Club Code of Conduct](https://hackclub.com/conduct/) also apply here,
+regardless of their elgibility for YSWS grants at Hack Club or if they are part of a team of
+an fiscally-sponsored organization/event/project under HCB.
 
 ## Reporting CoC violations
 
@@ -20,4 +23,4 @@ Enforcement activites from project maintainers and Hack Club Firefighters should
 adopted from [Mozilla's enforcement ladder](https://github.com/mozilla/inclusion/blob/master/code-of-conduct-enforcement/consequence-ladder.md)
 unless in edge cases where requires drastic actions.
 
-Each action must be logged at [public our moderation logs](https://transparency.recaptime.dev/modlog) by TBD.
+Each action must be logged at [public our moderation logs](https://transparency.recaptime.dev/modlog) once the report is reviewed and actions are taken.
