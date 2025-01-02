@@ -4,13 +4,17 @@
   "description": "The backend code for Hack Club Leeks app.",
   "main": "app.ts",
   "scripts": {
-    "start": "dotenvx run -f .env.production -- ts-node app.ts",
-    "dev": "dotenvx run -f .env -- ts-node-dev app.ts",
+    "start": "dotenvx run -f .env.production -- tsx app.ts",
+    "dev": "dotenvx run -f .env -- tsx watch --clear-screen=false app.ts",
     "studio": "npm run studio:dev",
+    "prisma:generate-dev": "dotenvx run -f .env -- prisma generate",
+    "prisma:generate-prod": "dotenvx run -f .env.production -- prisma generate",
     "migrate:dev": "dotenvx run -f .env -- prisma migrate dev",
     "migrate:prod": "dotenvx run -f .env.production -- prisma migrate deploy",
     "studio:dev": "BROWSER=none dotenvx run -f .env -- prisma studio --browser none",
-    "studio:prod": "BROWSER=none dotenvx run -f .env.production -- prisma studio -- browser none"
+    "studio:prod": "BROWSER=none dotenvx run -f .env.production -- prisma studio -- browser none",
+    "dotenvx:prod": "dotenvx run -f .env.production --",
+    "dotenvx:dev": "dotenvx run -f .env --"
   },
   "author": {
     "name": "Andrei Jiroh Halili",
@@ -33,12 +37,11 @@
     "@prisma/client": "^6.1.0",
     "@slack/bolt": "^4.0.0",
     "@slack/logger": "^4.0.0",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.19.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.3",
     "prisma": "^6.1.0",
-    "ts-node-dev": "^2.0.0",
     "tslib": "^2.7.0",
     "typescript": "^5.6.2"
   }
