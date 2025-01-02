@@ -59,6 +59,8 @@
                     PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
                     PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
                   };
+
+                  devcontainer.enable = true;
                 }
               ];
             };
