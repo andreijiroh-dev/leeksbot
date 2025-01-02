@@ -30,14 +30,14 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.21.0",
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^6.1.0",
     "@slack/bolt": "^4.0.0",
     "@slack/logger": "^4.0.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@types/node": "^22.7.5",
-    "prisma": "^5.20.0",
+    "@types/node": "^22.10.3",
+    "prisma": "^6.1.0",
     "ts-node-dev": "^2.0.0",
     "tslib": "^2.7.0",
     "typescript": "^5.6.2"
