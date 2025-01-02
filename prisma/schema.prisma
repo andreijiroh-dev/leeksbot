@@ -44,3 +44,14 @@ model SlackChannels {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+model SlackUsers {
+  id String @id @unique
+  bot_admin Boolean @default(false)
+  is_banned Boolean @default(false)
+  ban_reason String?
+  banned_by String?
+  banned_at DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
