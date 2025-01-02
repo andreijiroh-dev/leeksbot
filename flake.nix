@@ -60,7 +60,12 @@
                     PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
                   };
 
-                  devcontainer.enable = true;
+                  devcontainer = {
+                    enable = true;
+                    settings = {
+                      updateContentCommand = "echo \"info: skipping 'devenv test' per https://github.com/cachix/devenv/issues/1120 for now\"";
+                    };
+                  };
                 }
               ];
             };

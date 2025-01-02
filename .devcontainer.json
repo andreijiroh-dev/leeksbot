@@ -8,5 +8,5 @@
   },
   "image": "ghcr.io/cachix/devenv:latest",
   "overrideCommand": false,
-  "updateContentCommand": "devenv test"
+  "updateContentCommand": "echo \"info: skipping 'devenv test' per https://github.com/cachix/devenv/issues/1120 for now\""
 }
