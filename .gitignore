@@ -131,6 +131,8 @@ dist
 # Devenv
 .devenv*
 .direnv*
+# Ignore devenv-generated devcontainer config for now
+.devcontainer.json
 
 # pre-commit
 .pre-commit-config.yaml
