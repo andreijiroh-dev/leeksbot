@@ -35,6 +35,10 @@ export const botCommandHandler = async ({
     await respond({
       blocks: helpCommand
     })
+  } else if (params[0] == "ping") {
+    await respond({
+      text: "Pong! We're up."
+    })
   } else if (params[0] == "status") {
     let entry;
 
@@ -57,7 +61,7 @@ export const botCommandHandler = async ({
     logOps.info(`slash-commands:status`, `db query for ${params[1]}:`, JSON.stringify(entry))
 
     if (!entry) {
-      await respond(":warning: Either that does not exist or you used the last part from the permalink but not yet recorded on our end.")
+      await respond(":warning: Either that does not exist or you used the last part from the permalink but not yet recorded on our end. If you paste the message ID with any formatting with it, try again pasting without it.")
       return;
     }
 

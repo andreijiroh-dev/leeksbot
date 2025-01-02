@@ -8,9 +8,12 @@ export const helpCommand = [
   new TextSection(new MarkdownText("Most of the commands here are either used as utility or reserved to bot admins only.")).render(),
   new DividerSection().render(),
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} help\` - show this help message`)).render(),
+  new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} ping\` - check if the bot is online`)).render(),
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} status <message_id>\` - get status of a message on the review queue`)).render(),
+  new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} queue <message_id>\` - queue a message for review`)).render(),
+  new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} nuke-from-leeks <message_id>\` - remove an approved leek from the channel`)).render(),
   new DividerSection().render(),
-  new TextSection(new MarkdownText("If you found any bugs, please report it in #leeksbot channel or via the issue tracker")).render()
+  new TextSection(new MarkdownText("If you found any bugs, please report it in #leeksbot-meta channel or via the <issue tracker|https://github.com/andreijiroh-dev/leeksbot/issues>")).render()
 ]
 
 export const generateReviewQueueMessage = async (
@@ -24,14 +27,14 @@ export const generateReviewQueueMessage = async (
     message_ts: msg_id
   })
 
-  let submissionMethod;
+  let submissionMethod: string = "unknown";
 
   if (method == "reaction") {
-    submissionMethod == "Leeks reaction";
+    submissionMethod = "Leeks reaction";
   } else if (method == "msg_action") {
-    submissionMethod == "Flag as leeks message reaction";
+    submissionMethod = "Flag as leeks message reaction";
   } else if (method == "requeued") {
-    submissionMethod == "Requeued back from backburner";
+    submissionMethod = "Requeued back from backburner";
   }
 
   return new Blocks([
@@ -86,6 +89,7 @@ export const permissionDenied = new Blocks([
   new TextSection(new MarkdownText(":x: You don't have enough permissions to do this. If you're a review queue team member for leeksbot, please <https://github.com/andreijiroh-dev/issues|file a new issue> or contact @ajhalili2006."))
 ]).render()
 
+// TODO: Use this when triggered in a private channel.
 export const dontUseItHere = new Blocks([
-  new TextSection(new MarkdownText(`*You probably don't want to use it here, right?* We blocked usage of this message action on <#${detectEnvForChannel()}> and in DMs.`))
+  new TextSection(new MarkdownText(`*You probably don't want to use it here, right?* We blocked usage of this message action on <#${detectEnvForChannel()}> and in DMs/private channels.`))
 ]).render()

@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-nixos"]
 }
 
 datasource db {
@@ -17,7 +18,7 @@ datasource db {
 model SlackLeeks {
   // message and channel IDs
   message_id           String  @id @unique
-  channel_id           String
+  channel_id           String // TODO: Turn this into a link to SlackChannels
   permalink_message_id String? // for now
 
   // posted message ID in leeks
@@ -33,6 +34,13 @@ model SlackLeeks {
   leeksFlagCount Int @default(0)
 
   // metadata
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model SlackChannels {
+  id String @id @unique
+  allowlisted Boolean @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

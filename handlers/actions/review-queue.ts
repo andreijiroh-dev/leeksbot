@@ -4,11 +4,12 @@ import {
   SlackActionMiddlewareArgs
 } from '@slack/bolt';
 import { logOps, prisma } from '../../app';
-import { detectEnvForChannel } from '../../lib/env';
+import { detectEnvForChannel, getBaseSlashCommand } from '../../lib/env';
 import { botAdmins, queueChannel } from '../../lib/constants';
 import { generateReviewQueueMessage, permissionDenied } from '../../lib/blocks';
 import {
   ActionsSection,
+  Blocks,
   ButtonAction,
   ContextSection,
   MarkdownText,
@@ -220,6 +221,12 @@ export const undoApproveLeek = async ({ ack, client, body }:
   })
 
   if (entry.status == "approved") {
+    await client.chat.postMessage({
+      channel: detectEnvForChannel(),
+      thread_ts: entry.leeks_channel_post_id,
+      text: ":warning: This leek was flagged as flase positive by an reviewer. Please stop replying to this thread and apologies for those notified."
+    })
+
     await client.chat.delete({
       channel: detectEnvForChannel(),
       ts: entry.leeks_channel_post_id
@@ -237,4 +244,44 @@ export const undoApproveLeek = async ({ ack, client, body }:
 
     await sendDM(entry.first_flagged_by, `Hey there, we had to taken down your previously flagged leek from the channel because it is not a leek. You can appeal it in #leeksbot-meta if this is really a leek.`)
   }
+}
+
+export const ignore_leek = async ({ ack, client, body }:
+  AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockButtonAction>) => {
+  // ack first
+  await ack();
+
+  // get DB data before doing anything
+  const entry = await prisma.slackLeeks.findFirst({
+    where: {
+      review_queue_id: body.actions[0].value
+    }
+  })
+  logOps.info(`review-queue:${entry.message_id}`, `ignoring and deleting review_queue message`)
+
+  await client.views.open({
+    trigger_id: body.trigger_id,
+    view: {
+      type: "modal",
+      title: new PlainText("Queue message removed").render(),
+      blocks: new Blocks([
+        new TextSection(new MarkdownText(`If you need this back, just send \`${getBaseSlashCommand()} queue ${entry.message_id}\` and it will be added back here.`))
+      ]).render()
+    }
+  })
+
+  await prisma.slackLeeks.update({
+    where: {
+      message_id: body.actions[0].value
+    },
+    data: {
+      review_queue_id: "deleted",
+      status: "ignored"
+    }
+  })
+
+  await client.chat.delete({
+    channel: queueChannel,
+    ts: body.message.ts
+  })
 }
