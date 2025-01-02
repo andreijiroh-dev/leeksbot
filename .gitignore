@@ -127,3 +127,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Devenv
+.devenv*
+.direnv*
+
+# pre-commit
+.pre-commit-config.yaml
