@@ -6,6 +6,9 @@
  * 
  * If you opt to add your Slack user ID here as part of a merge request or
  * email patch
+ * 
+ * @deprecated No longer used in the codebase since we're using the Postgres backend, 
+ * but kept for historical reasons.
  */
 export const botAdmins = [
   "U07CAPBB9B5", // ~ajhalili2006
@@ -25,6 +28,12 @@ export const leeksReactionEmojis = [
   "leek"
 ]
 
+/**
+ * List of allowlisted channels to be monitored by Leeks bot on flags.
+ * 
+ * @deprecated No longer used in the codebase since we're using the Postgres backend,
+ * although kept for historical reasons.
+ */
 export const allowlistedChannels = [
   "C0C78SG9L", // Hack Club HQ
   "C05SVRTCDGV", // HQ general engineering chat

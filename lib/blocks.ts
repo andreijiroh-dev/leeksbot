@@ -4,7 +4,6 @@ import { detectEnvForChannel, getBaseSlashCommand } from "./env";
 
 export const helpCommand = [
   new HeaderSection(new PlainText("Help commands for leeksbot")).render(),
-  new DividerSection().render(),
   new TextSection(new MarkdownText("Most of the commands here are either used as utility or reserved to bot admins only.")).render(),
   new DividerSection().render(),
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} help\` - show this help message`)).render(),
@@ -12,8 +11,10 @@ export const helpCommand = [
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} status <message_id>\` - get status of a message on the review queue`)).render(),
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} queue <message_id>\` - queue a message for review`)).render(),
   new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} nuke-from-leeks <message_id>\` - remove an approved leek from the channel`)).render(),
+  new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} allowlist-channel\` - remove an approved leek from the channel`)).render(),
+  new TextSection(new MarkdownText(`\`${getBaseSlashCommand()} blocklist-channel\` - remove an approved leek from the channel`)).render(),
   new DividerSection().render(),
-  new TextSection(new MarkdownText("If you found any bugs, please report it in #leeksbot-meta channel or via the <issue tracker|https://github.com/andreijiroh-dev/leeksbot/issues>")).render()
+  new TextSection(new MarkdownText("If you found any bugs, please report it in #leeksbot-meta channel or via the <https://github.com/andreijiroh-dev/leeksbot/issues|issue tracker>")).render()
 ]
 
 export const generateReviewQueueMessage = async (
@@ -86,7 +87,8 @@ export const dequeuedMessage = (
 }
 
 export const permissionDenied = new Blocks([
-  new TextSection(new MarkdownText(":x: You don't have enough permissions to do this. If you're a review queue team member for leeksbot, please <https://github.com/andreijiroh-dev/issues|file a new issue> or contact @ajhalili2006."))
+  new TextSection(new MarkdownText(":x: You are not allowed to use this feature. This is either reserved for bot admins or you're banned from using the bot.")),
+  new TextSection(new MarkdownText("If you think this is a mistake, please contact the bot admins (<!subteam^S07SN8KQZFC>)."))
 ]).render()
 
 // TODO: Use this when triggered in a private channel.

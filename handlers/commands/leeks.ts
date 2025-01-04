@@ -2,19 +2,25 @@ import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from "@slack/bolt";
 import { generateReviewQueueMessage, helpCommand, permissionDenied } from "../../lib/blocks";
 import { botAdmins, queueChannel } from "../../lib/constants";
 import { logOps, prisma } from "../../app";
-import { getBaseSlashCommand } from "../../lib/env";
+import { detectEnvForChannel, getBaseSlashCommand } from "../../lib/env";
 import { Blocks, ContextSection, MarkdownText, PlainText, TextSection } from "../../lib/block-builder";
 import { sendDM } from "../../lib/utils";
+import { checkIfAdmin } from "../../lib/admin";
+import { SlackLeeksStatus } from "../../lib/types";
+import { helpOps, pingOps, statusOps } from "./sub-utils";
 
 export const botCommandHandler = async ({
   ack,
   respond,
   payload,
   say,
-  client
+  client,
+  context,
+  logger,
+  next
 }: AllMiddlewareArgs & SlackCommandMiddlewareArgs) => {
   const {text, user_id, channel_id, channel_name} = payload;
-  const isThisBotAdmin = botAdmins.includes(user_id);
+  const isThisBotAdmin = await checkIfAdmin(user_id);
   const params = text.split(" ")
 
   logOps.info(
@@ -31,15 +37,13 @@ export const botCommandHandler = async ({
   // ack first
   await ack()
 
-  if (!text || params[0] == "help") {
-    await respond({
-      blocks: helpCommand
-    })
-  } else if (params[0] == "ping") {
-    await respond({
-      text: "Pong! We're up."
-    })
-  } else if (params[0] == "status") {
+  switch (params[0]) {
+    case "ping": await pingOps({ack, respond, payload, say, client, context, logger, next, command: payload, body: payload}); return;
+    case "help": await helpOps({ack, respond, payload, say, client, context, logger, next, command: payload, body: payload}); return;
+    case "status": await statusOps({ack, respond, payload, say, client, context, logger, next, command: payload, body: payload}); return;
+  }
+
+  if (params[0] == "status") {
     let entry;
 
     // if starts with p, look up by the permalink_message_id string
@@ -161,9 +165,95 @@ export const botCommandHandler = async ({
     }
 
     await sendDM(entry.first_flagged_by, `Hey there, we have requeued your leek flag (message ID: \`${entry.message_id}\`) for review by an admin. Expect another message here for any updates.`)
+  } else if (params[0] == "nuke-from-leeks") {
+    let entry;
+
+    if (params.length < 2) {
+      await respond({
+        text: `You need to provide a message ID to use this feature.`
+      })
+      return;
+    }
+
+    // if starts with p, look up by the permalink_message_id string
+    if (params[1].startsWith("p")) {
+      entry = await prisma.slackLeeks.findFirst({
+        where: {
+          permalink_message_id: params[1]
+        }
+      })
+      // otherwise, do this instead
+    } else {
+      entry = await prisma.slackLeeks.findFirst({
+        where: {
+          message_id: params[1]
+        }
+      })
+    }
+
+    const { messages: reviewQueueData } = await client.conversations.history({
+      channel: queueChannel,
+      latest: entry.review_queue_id,
+      limit: 1
+    })
+
+    if (isThisBotAdmin == false) {
+      await respond({
+        blocks: permissionDenied
+      })
+      return;
+    }
+
+    if (!entry) {
+      await respond({
+        text: ":warning: Either that does not exist or you used the last part from the permalink but not yet recorded on our end. If you paste the message ID with any formatting with it, try again pasting without it."
+      })
+      return;
+    }
+
+    if (entry.status == SlackLeeksStatus.Approved) {
+      await client.chat.postMessage({
+        channel: detectEnvForChannel(),
+        thread_ts: entry.leeks_channel_post_id,
+        text: ":warning: This leek was flagged as false positive by an reviewer. Please stop replying to this thread and apologies for those notified."
+      })
+
+      await client.chat.delete({
+        channel: detectEnvForChannel(),
+        ts: entry.leeks_channel_post_id
+      })
+
+      await prisma.slackLeeks.update({
+        where: {
+          message_id: entry.message_id
+        },
+        data: {
+          leeks_channel_post_id: "deleted",
+          status: SlackLeeksStatus.Rejected
+        }
+      })
+
+      const { blocks,  } = reviewQueueData[0]
+
+      await client.chat.update({
+        channel: queueChannel,
+        ts: entry.review_queue_id,
+        blocks: [
+
+        ]
+      })
+
+      await respond({
+        text: `Successfully removed the leek flag for message ID \`${entry.message_id}\`.`
+      })
+    } else {
+      await respond({
+        text: `This leek flag entry is not approved yet. Check the queue channel and remove it from the queue.`
+      })
+    }
   } else {
     await respond({
-      text: `I didn't understand that command. Try \`${getBaseSlashCommand()} help\`.`
+      text: `I didn't understand that command or probably unimplemented yet. Try \`${getBaseSlashCommand()} help\`.`
     })
   }
 }

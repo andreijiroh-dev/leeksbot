@@ -1,9 +1,12 @@
 import { App, ExpressReceiver, LogLevel } from '@slack/bolt';
 import { registerHandlers } from './handlers';
-import { config } from './lib/env';
+import { config, detectEnvForChannel } from './lib/env';
 import { PrismaClient } from "@prisma/client";
 import { env } from 'process';
 import { ConsoleLogger } from '@slack/logger';
+import { botAdmins, queueChannel } from './lib/constants';
+import { sendDM } from './lib/utils';
+import("./lib/sentry.js")
 
 // Globals
 export const prisma = new PrismaClient();
@@ -40,6 +43,8 @@ registerHandlers(slackApp);
     await prisma.$connect()
     logOps.info("slackAppBase", `⚡️ Bolt app now up and running`);
     if (config.slack.socketMode !== true) logOps.info("API server now reachable at port", config.port)
+
+    await sendDM(botAdmins[0], process.env.NODE_ENV == "production" ? "Leeks bot is now online!" : "Leeks bot is now online! (development, apologies for spamming if this annoys you)")
   } catch (error) {
     console.error('Unable to start App', error);
     await slackApp.stop()

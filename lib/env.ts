@@ -16,6 +16,10 @@ type BotEnvConfig = {
     socketMode: boolean,
     sigSecret: string
   }
+
+  sentry: {
+    dsn: string
+  }
 }
 
 export const config: BotEnvConfig = {
@@ -27,6 +31,9 @@ export const config: BotEnvConfig = {
     appToken: env.SLACK_APP_TOKEN,
     socketMode: env.NODE_ENV != "production",
     sigSecret: env.SLACK_SIGNING_SECRET
+  },
+  sentry: {
+    dsn: env.SENTRY_DSN || "https://86feb85b378437aca113d95292a505cf@o1146989.ingest.us.sentry.io/4508580657102848"
   }
 }
 
