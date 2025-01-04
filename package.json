@@ -35,6 +35,8 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.21.0",
     "@prisma/client": "^6.1.0",
+    "@sentry/node": "^8.47.0",
+    "@sentry/profiling-node": "^8.47.0",
     "@slack/bolt": "^4.0.0",
     "@slack/logger": "^4.0.0",
     "tsx": "^4.19.2"
